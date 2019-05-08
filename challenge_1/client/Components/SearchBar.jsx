@@ -4,7 +4,7 @@ const SearchBar = ({ handleSearchSubmit }) => {
   return (
     <div className="search-container">
       <form id="search-form">
-        <input type="text" id="searchbar" />
+        <input type="search" id="searchbar" />
         <button
           type="button"
           onClick={() => {

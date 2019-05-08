@@ -8,6 +8,7 @@
   display: flex;
   justify-content: space-around;
   width: 80vw;
+  list-style-type: none;
 }
 
 .event-item {
