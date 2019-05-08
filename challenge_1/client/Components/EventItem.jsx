@@ -1,23 +1,31 @@
 import React from "react";
 
-const EventItem = ({ event, edit, favorite }) => {
-  let props = Object.keys(event);
+const EventItem = ({ event, edit, favorite, displayFavorites }) => {
+  const keys = Object.keys(event);
+  let editFn, favoriteFn;
+
+  if (!displayFavorites) {
+    editFn = edit.bind(null, event.id);
+    favoriteFn = favorite.bind(null, event.id);
+  }
 
   return (
     <div className="event-item">
-      {props.map(prop => (
-        <div>
-          {prop}: {event[prop]}
+      {keys.map((key, index) => (
+        <div key={index}>
+          {key}: {event[key]}
         </div>
       ))}
-      <div className="event-buttons">
-        <button type="button" onClick={edit}>
-          Edit
-        </button>
-        <button type="button" onClick={favorite}>
-          Favorite
-        </button>
-      </div>
+      {displayFavorites ? null : (
+        <div className="event-buttons">
+          <button type="button" onClick={editFn}>
+            Edit
+          </button>
+          <button type="button" onClick={favoriteFn}>
+            Favorite
+          </button>
+        </div>
+      )}
     </div>
   );
 };
