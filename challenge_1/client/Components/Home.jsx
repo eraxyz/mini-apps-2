@@ -124,34 +124,41 @@ class Home extends React.Component {
   }
 
   render() {
+    const {
+      editingActive,
+      editingEvent,
+      favoritingId,
+      favoritingActive,
+      favorites,
+      currentSearchQuery,
+      events,
+      pageCount
+    } = this.state;
     return (
       <div className="main-container">
         <h2>Historical Event Finder</h2>
         <SearchBar handleSearchSubmit={this.handleSearchSubmit} />
-        {this.state.editingActive ? (
-          <EditEvent
-            event={this.state.editingEvent}
-            save={this.handleEditSave}
-          />
+        {editingActive ? (
+          <EditEvent event={editingEvent} save={this.handleEditSave} />
         ) : null}
-        {this.state.favoritingActive ? (
+        {favoritingActive ? (
           <FavoriteSetSelect
-            eventId={this.state.favoritingId}
+            eventId={favoritingId}
             addToFavorites={this.handleFavoriteSave}
-            favorites={this.state.favorites}
+            favorites={favorites}
           />
         ) : null}
         <EventList
-          query={this.state.currentSearchQuery}
-          events={this.state.events}
+          query={currentSearchQuery}
+          events={events}
           eventEdit={this.handleEventEdit}
           eventFavorite={this.handleEventFavorite}
         />
-        {this.state.events.length === 0 ? null : (
+        {events.length === 0 ? null : (
           <ReactPaginate
             previousLabel={"previous"}
             nextLabel={"next"}
-            pageCount={this.state.pageCount}
+            pageCount={pageCount}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={this.handlePageClick}
