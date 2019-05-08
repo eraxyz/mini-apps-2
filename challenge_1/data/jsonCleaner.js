@@ -16,4 +16,4 @@ for (let i = 0; i < json.events.length; i++) {
   }
 }
 
-dbOutput.write("]}");
+dbOutput.write('], \n"favorites": []}');
