@@ -2,7 +2,6 @@ import React from "react";
 
 const FavoriteSetSelect = ({ eventId, favorites, addToFavorites }) => {
   const id = eventId;
-  console.log(id);
 
   const addNewSet = () => {
     addToFavorites(
@@ -13,7 +12,6 @@ const FavoriteSetSelect = ({ eventId, favorites, addToFavorites }) => {
   };
 
   const selectSet = () => {
-    console.log(id);
     const sets = document.getElementById("favorite-sets");
     addToFavorites(id, sets.options[sets.selectedIndex].value);
   };
