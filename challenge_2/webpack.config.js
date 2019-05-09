@@ -1,10 +1,10 @@
 var path = require("path");
 
 module.exports = {
-  entry: path.join(__dirname, "./client/app.jsx"),
+  entry: path.join(__dirname, "./client/index.jsx"),
   output: {
     filename: "bundle.js",
-    path: path.join(__dirname, "./client")
+    path: path.join(__dirname, "./public")
   },
   module: {
     rules: [
