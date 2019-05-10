@@ -1,0 +1,16 @@
+.keypad-container {
+  display: flex;
+  width: 320px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.keypad-number {
+  display: flex;
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  font-size: 32px;
+  justify-content: center;
+  align-items: center;
+}
