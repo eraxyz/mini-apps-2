@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const redis = require("redis");
 const APIKey = require("./CryptoCompareKey");
+const axios = require("axios");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,35 +20,30 @@ client.on("ready", () => {
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
-const getCryptoData = (coin, limit, callback) => {
+const getCryptoData = (coin, limit, endDate, callback) => {
   axios
     .get(
-      `https://min-api.cryptocompare.com/data/histoday?fsym=${coin}&tsym=USD&limit=${limit}&api_key=${APIKey}`
+      `https://min-api.cryptocompare.com/data/histoday?fsym=${coin}&tsym=USD&limit=${limit}&toTs=${endDate}&api_key=${APIKey}`
     )
-    .then(response => console.log(response))
+    .then(response => callback(response.data))
     .catch(err => console.error(err));
 };
 
-const checkRedis = (coin, limit, callback) => {
-  client.get(`${coin}-${limit}`, callback);
-};
-
 app.get("/priceIndex", (req, res) => {
-  if (req.query.coin && req.query.limit) {
-    res.send(500);
+  const { coin, limit, endDate, cached } = req.query;
+  if (!coin || !limit || cached === undefined) {
+    res.sendStatus(500);
   } else {
-    checkRedis(req.query.coin, req.query.limit, (err, data) => {
-      if (err) {
-        getCryptoData(req.query.coin, req.query.limit, (err, data) => {
-          if (err) {
-            res.send(500);
-          } else {
-            res.send(data);
-            client.set(`${coin}-${limit}`);
-          }
+    client.get(`${coin}-${limit}-${endDate}`, (err, data) => {
+      if (data === null && cached === "false") {
+        getCryptoData(coin, limit, endDate, data => {
+          res.send(data);
+          client.set(`${coin}-${limit}-${endDate}`, JSON.stringify(data));
         });
+      } else if (data !== null) {
+        res.send(JSON.parse(data));
       } else {
-        res.send(data);
+        res.send({ Data: null });
       }
     });
   }
