@@ -2,14 +2,21 @@ import React from "react";
 
 const KeyPad = ({ keyClick, pinsLeft }) => {
   const determineClassName = value =>
-    value > pinsLeft ? "keypad-number disabled" : "keypad-number enabled";
+    value > pinsLeft || pinsLeft === 0
+      ? "keypad-number disabled"
+      : "keypad-number enabled";
 
-  const determineClickEvent = value => (value > pinsLeft ? null : keyClick);
+  const determineClickEvent = value =>
+    value > pinsLeft || pinsLeft === 0 ? null : keyClick;
 
   const numberKeyArray = [];
-  for (let i = 1; i < 11; i++) {
+  for (let i = 0; i < 11; i++) {
     numberKeyArray.push(
-      <div className={determineClassName(i)} onClick={determineClickEvent(i)}>
+      <div
+        key={i}
+        className={determineClassName(i)}
+        onClick={determineClickEvent(i)}
+      >
         {i}
       </div>
     );
