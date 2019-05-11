@@ -1,7 +1,9 @@
 import React from "react";
+import ReactPaginate from "react-paginate";
 import KeyPad from "./Components/KeyPad.jsx";
 import Scorecard from "./Components/Scorecard.jsx";
 import OptionsBar from "./Components/OptionsBar.jsx";
+import Scoreboard from "./Components/Scoreboard.jsx";
 
 class App extends React.Component {
   constructor() {
@@ -12,7 +14,9 @@ class App extends React.Component {
       bowls: [],
       score: [],
       extraBowl: "inactive",
-      scoreboard: []
+      scoreboard: [],
+      pageCount: 1,
+      currentPage: 1
     };
     this.handleKeyClick = this.handleKeyClick.bind(this);
     this.updateName = this.updateName.bind(this);
@@ -23,7 +27,8 @@ class App extends React.Component {
       .then(response => response.json())
       .then(scoreboard =>
         this.setState({
-          scoreboard
+          scoreboard,
+          pageCount: Math.ceil(scoreboard / 5)
         })
       )
       .catch(err => console.error(err));
@@ -62,6 +67,18 @@ class App extends React.Component {
       bowls.push([Number(e.target.textContent)]);
       this.updateScore(bowls, 10 - Number(e.target.textContent));
     }
+  }
+
+  handlePageClick({ selected }) {
+    this.setState({
+      currentPage: selected + 1
+    });
+  }
+
+  updateName(e) {
+    this.setState({
+      name: e.target.value
+    });
   }
 
   updateScore(bowls, pinsLeft = 10, extraBowl = "inactive") {
@@ -135,24 +152,34 @@ class App extends React.Component {
     });
   }
 
-  updateName(e) {
-    this.setState({
-      name: e.target.value
-    });
-  }
-
   render() {
-    const { pinsLeft, bowls, score, extraBowl } = this.state;
+    const {
+      pinsLeft,
+      bowls,
+      score,
+      extraBowl,
+      scoreboard,
+      currentPage
+    } = this.state;
     return (
       <div>
-        <h2>Bowling</h2>
+        <h1>Bowling</h1>
         <OptionsBar handleChange={this.updateName} />
         <KeyPad keyClick={this.handleKeyClick} pinsLeft={pinsLeft} />
-        <Scorecard
-          frameCount={10}
-          bowls={bowls}
-          score={score}
-          extraBowl={extraBowl}
+        <h2>Scorecard</h2>
+        <Scorecard bowls={bowls} score={score} extraBowl={extraBowl} />
+        <h2>Scoreboard</h2>
+        <Scoreboard scores={scoreboard} page={currentPage} />
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          pageCount={this.state.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          subContainerClassName={"pages pagination"}
+          activeClassName={"active"}
         />
       </div>
     );

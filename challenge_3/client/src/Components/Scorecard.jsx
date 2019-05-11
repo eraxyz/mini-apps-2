@@ -1,14 +1,14 @@
 import React from "react";
 
-const Scorecard = ({ frameCount, bowls, score, extraBowl }) => {
+const Scorecard = ({ bowls, score, extraBowl }) => {
   const frames = [];
 
   const replaceNumbers = (frame, frameBowls, index) => {
-    if (frame === 10) {
-      if (frameBowls[index] === 10) return "X";
+    if (frame === 10 && frameBowls[index] === 10) {
+      return "X";
     }
 
-    if (frameBowls[0] === 10) {
+    if (frameBowls[0] === 10 && frame !== 10) {
       return index === 0 ? "X" : "";
     }
 
@@ -19,7 +19,7 @@ const Scorecard = ({ frameCount, bowls, score, extraBowl }) => {
     return frameBowls[index];
   };
 
-  for (let i = 1; i <= frameCount; i++) {
+  for (let i = 1; i <= 10; i++) {
     frames.push(
       <div className="frame" key={i}>
         <div className="frame-header">{i}</div>
@@ -34,7 +34,7 @@ const Scorecard = ({ frameCount, bowls, score, extraBowl }) => {
               ? replaceNumbers(i, bowls[i - 1], 1)
               : ""}
           </div>
-          {i === frameCount ? (
+          {i === 10 ? (
             <div className={`bowl3 ${extraBowl}`}>
               {bowls[i - 1] !== undefined
                 ? replaceNumbers(i, bowls[i - 1], 2)
@@ -55,7 +55,6 @@ const Scorecard = ({ frameCount, bowls, score, extraBowl }) => {
 
   return (
     <div>
-      <h3>Scorecard</h3>
       <div className="main-scorecard-container">{frames}</div>
     </div>
   );
